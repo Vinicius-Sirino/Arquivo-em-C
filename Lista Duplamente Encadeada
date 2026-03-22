@@ -1,0 +1,168 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct no {
+    int ra;
+    char nome[20];
+    struct no *next;
+    struct no *prev;
+} no;
+
+no *inicio = NULL;
+no *fim = NULL;
+no *corrente = NULL;
+
+void inserir() {
+    no *novo = (no*)malloc(sizeof(no));
+    if (!novo) {
+        printf("Erro de alocacao de memoria!");
+        return;
+    }
+
+    printf("\nInforme o RA: ");
+    scanf("%d", &novo->ra);
+    printf("Informe o nome: ");
+    scanf("%s", novo->nome);
+
+    novo->next = NULL;
+    novo->prev = NULL;
+
+    if (inicio == NULL) {
+        inicio = novo;
+        fim = novo;
+    } else {
+        fim->next = novo;
+        novo->prev = fim;
+        fim = novo;
+    }
+
+    printf("\nElemento inserido com sucesso!");
+}
+
+void exibir() {
+    corrente = inicio;
+    printf("\n--- Lista completa ---\n");
+    while (corrente != NULL) {
+        printf("\nRA: %d", corrente->ra);
+        printf("\nNome: %s", corrente->nome);
+        printf("\n----------------------");
+        corrente = corrente->next;
+    }
+}
+
+void pesquisa() {
+    int ra_procurado, encontrado = 0;
+    printf("\nInforme o RA para pesquisar: ");
+    scanf("%d", &ra_procurado);
+
+    corrente = inicio;
+    while (corrente != NULL) {
+        if (corrente->ra == ra_procurado) {
+            printf("\n--- Registro encontrado ---");
+            printf("\nRA: %d", corrente->ra);
+            printf("\nNome: %s", corrente->nome);
+            printf("\n---------------------------");
+            encontrado = 1;
+            break;
+        }
+        corrente = corrente->next;
+    }
+
+    if (!encontrado) {
+        printf("\nRA %d nao encontrado na lista!", ra_procurado);
+    }
+}
+
+void remover() {
+    int ra_remover, encontrado = 0;
+    printf("\nInforme o RA para remover: ");
+    scanf("%d", &ra_remover);
+
+    corrente = inicio;
+    while (corrente != NULL) {
+        if (corrente->ra == ra_remover) {
+            if (corrente->prev != NULL)
+                corrente->prev->next = corrente->next;
+            else
+                inicio = corrente->next;
+
+            if (corrente->next != NULL)
+                corrente->next->prev = corrente->prev;
+            else
+                fim = corrente->prev;
+
+            printf("\n--- Registro removido ---");
+            printf("\nRA: %d", corrente->ra);
+            printf("\nNome: %s", corrente->nome);
+            printf("\n-------------------------");
+
+            free(corrente);
+            encontrado = 1;
+            break;
+        }
+        corrente = corrente->next;
+    }
+
+    if (!encontrado) {
+        printf("\nRA %d nao encontrado na lista!", ra_remover);
+    }
+}
+
+int main() {
+    int opcao, continuar = 1;
+
+    while (continuar) {
+        system("cls"); // use "clear" no Linux/Mac
+        printf("\n\n=== MENU ===");
+        printf("\n1 - Inserir ");
+        printf("\n2 - Exibir lista");
+        printf("\n3 - Pesquisar por RA");
+        printf("\n4 - Remover por RA");
+        printf("\n5 - Sair");
+        printf("\nEscolha uma opcao: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                inserir();
+                system("pause"); // use getchar() se no Linux/Mac
+                break;
+            case 2:
+                if (inicio == NULL) {
+                    printf("\nLista vazia!");
+                } else {
+                    exibir();
+                }
+                system("pause");
+                break;
+            case 3:
+                if (inicio == NULL) {
+                    printf("\nLista vazia!");
+                } else {
+                    pesquisa();
+                }
+                system("pause");
+                break;
+            case 4:
+                if (inicio == NULL) {
+                    printf("\nLista vazia!");
+                } else {
+                    remover();
+                }
+                system("pause");
+                break;
+            case 5:
+                continuar = 0;
+                printf("\nSaindo...");
+                system("pause");
+                break;
+            default:
+                printf("\nOpcao invalida!");
+                system("pause");
+        }
+    }
+
+    return 0;
+}
+
