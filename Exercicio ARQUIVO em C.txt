@@ -1,0 +1,99 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+struct pessoa{
+    int codigo;
+    char nome[20];
+    float salario;
+};
+
+struct pessoa funcionario;
+
+void insert(){
+    char numstru[20];
+    int op;
+    FILE*fptr;
+    fptr = fopen("arquivo", "ab");
+    if(fptr ==NULL){
+        printf("\n erro na abertura do arquivo");
+        system("pause");
+    }
+    else{
+        printf("\n informe o codigo...");
+        scanf("%d", &funcionario.codigo);
+        printf("\n informe o nome: ");
+        scanf(" %[^\n]", funcionario.nome);
+        printf("\n informe o salario...");
+        scanf("%f", &funcionario.salario);
+        fwrite(&funcionario, sizeof(funcionario), 1, fptr);
+        printf("\n gravado com sucesso...");
+        system("pause");
+    }
+    fclose(fptr);
+}
+
+void pesquisa(){
+    char numstru[20];
+    int op, achou;
+    FILE*fptr;
+    fptr = fopen("arquivo", "rb");
+    if(fptr == NULL){
+        printf("\n problema com abertura do arquivo");
+        system("pause");
+    }
+    else{
+        achou = 0;
+        printf("\n informe o nome a ser pesquisado: ");
+        scanf(" %[^\n]", numstru);
+        while(fread(&funcionario, sizeof(funcionario), 1, fptr)){
+            if(strcmp(funcionario.nome, numstru) == 0){
+                printf("\n=== REGISTRO ENCONTRADO ===");
+                printf("\nCodigo: %d", funcionario.codigo);
+                printf("\nNome: %s", funcionario.nome);
+                printf("\nSalario: %.2f", funcionario.salario);
+                printf("\n");
+                system("pause");
+                achou = 1;
+                break;
+            }
+        }
+        if(achou == 0){
+            printf("\n registro nao esta constando no arquivo");
+            system("pause");
+        }
+        fclose(fptr);
+    }
+}
+
+int main(){
+    int opcao;
+    do{
+        printf("");
+        printf("                     MENU");
+        printf("");
+        printf("\n 1 inserir registro");
+        printf("\n 2 sair");
+        printf("\n 3 pesquisa");
+        printf("\n escolha uma opcao: ");
+        scanf("%d", &opcao);
+        switch(opcao){
+            case 1:
+                system("cls");
+                insert();
+                printf("\n entrar");
+                break;
+            case 2:
+                printf("\n saindo...");
+                break;
+            case 3:
+                system("cls");
+                pesquisa();
+                printf("\n pesquisa");
+                break;
+            default:
+                printf("\n invalido");
+                system("pause");
+        }
+    }while(opcao != 0);
+}
